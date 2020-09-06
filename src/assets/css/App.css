@@ -1,3 +1,45 @@
 /* Main CSS file */
+* {
+  box-sizing: border-box;
+  font-family: "Roboto", sans-serif;
+  outline: none;
+}
 
-@import '_example/_example.css';
+#app {
+  width: 300px;
+}
+
+input {
+  padding: 5px;
+  border: 1px solid black;
+  width: 100%;
+}
+
+ul {
+  padding: 0;
+  list-style-type: none;
+  margin: 0;
+  width: 100%;
+  background: #000;
+}
+
+ul li {
+  font-size: 0.8rem;
+  padding: 5px;
+  transition: background-color 0.1s;
+  opacity: 1;
+  color: #fff;
+}
+
+input:focus {
+  border-radius: 0;
+}
+
+ul li:hover {
+  background-color: #175ca1;
+  cursor: pointer;
+}
+
+.highlight {
+  background-color: #175ca1;
+}

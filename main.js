@@ -1,12 +1,13 @@
 'use strict'
 
 // Import parts of electron to use
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, globalShortcut } = require('electron')
 const path = require('path')
 const url = require('url')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
+let desktopWindow
 let mainWindow
 
 // Keep a reference for dev mode
@@ -30,14 +31,32 @@ if (process.platform === 'win32') {
 
 function createWindow() {
   // Create the browser window.
-  mainWindow = new BrowserWindow({
-    width: 1024,
-    height: 768,
+  const { screen } = require('electron');
+
+  const { width: screenWidth, height: screenHeight } = screen.getPrimaryDisplay().workAreaSize;
+
+  desktopWindow = new BrowserWindow({
     show: false,
-    webPreferences: {
-      nodeIntegration: true
-    }
-  })
+    width: screenWidth,
+    height: screenHeight,
+    backgroundColor: '#133337',
+    opacity: 0.9, // production 0.9ish
+    focusable: false,
+    frame: false,
+  });
+  mainWindow = new BrowserWindow({
+    show: false,
+    parent: desktopWindow,
+    webPreferences: { nodeIntegration: true, textAreasAreResizable: false },
+    // frame: false,
+    hasShadow: false,
+    backgroundColor: '#133337', // development only
+    transparent: true,
+    // resizable: false,
+    x: screenWidth / 2 - 150,
+    y: screenHeight / 2 - 150,
+    useContentSize: true,
+  });
 
   // and load the index.html of the app.
   let indexPath
@@ -58,6 +77,17 @@ function createWindow() {
   }
 
   mainWindow.loadURL(indexPath)
+
+  globalShortcut.register('Alt+D', () => {
+    if (mainWindow.isFocused()) {
+        desktopWindow.hide();
+        mainWindow.minimize();
+        mainWindow.hide();
+    } else {
+        // desktopWindow.show();
+        mainWindow.show();
+    }
+  });
 
   // Don't show until we are ready and loaded
   mainWindow.once('ready-to-show', () => {

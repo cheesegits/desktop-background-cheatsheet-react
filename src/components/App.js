@@ -7,7 +7,7 @@ import Dropdown from './dropdown'
 class App extends Component {
   render() {
     return (
-      <div>
+      <div id='app'>
         <Input />
         <Dropdown />
       </div>

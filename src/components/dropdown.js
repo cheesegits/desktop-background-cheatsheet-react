@@ -4,7 +4,9 @@ class Dropdown extends Component {
     render() {
         return (
             <div>
-                <ul></ul>
+                <ul>
+                    <li>Placeholder</li>
+                </ul>
             </div>
         )
     }
