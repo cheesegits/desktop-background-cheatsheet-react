@@ -1,13 +1,23 @@
-import React, {Component} from 'react';
+import React, { useState, useEffect } from "react";
 
-class Input extends Component {
-    render() {
-        return (
-            <div>
-                <input></input>
-            </div>
-        )
-    }
-}
+const Input = ({ input, setInput, index, setIndex }) => {
+  const updateInput = (event) => {
+    setInput(event.target.value);
+  };
+  const showFiles = () => {
+    console.log("working");
+  };
+
+  return (
+    <div>
+      <input
+        id="input"
+        onChange={updateInput}
+        onClick={showFiles}
+        placeholder={"Click to show all files"}
+      ></input>
+    </div>
+  );
+};
 
 export default Input;
