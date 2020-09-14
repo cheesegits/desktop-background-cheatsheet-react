@@ -20,7 +20,7 @@ const Input = ({ input, setInput, setFiles, allFiles }) => {
     }
   };
 
-  // toggle showing all files when input is clicked, but does nothing input has text
+  // toggle showing all files when input is clicked
   const toggleAllFiles = () => {
     if (placeholder === "Click to show all files") {
       setFiles(allFiles);

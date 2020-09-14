@@ -6,6 +6,9 @@ const fs = require("fs");
 const path = require("path");
 const url = require("url");
 
+const wallpaper = require('wallpaper');
+const ks = require('node-key-sender');
+
 const backgroundDirectory = path.join(__dirname, "./assets");
 const directoryFiles = [];
 
@@ -159,6 +162,28 @@ app.on("activate", () => {
 });
 
 ipcMain.on("App-onMount", (event) => {
-  console.log("input-clicked directoryFiles: ", directoryFiles); // indefined
   event.sender.send("all-files", directoryFiles);
+});
+ipcMain.on('set-background', (event, backgroundName) => {
+  fs.readdir(backgroundDirectory, (error, files) => {
+      if (error) {
+          console.log(error);
+      } else {
+          const image = files.find((name) => name === backgroundName);
+          if (!image) {
+              return;
+          }
+          wallpaper.set(path.join(backgroundDirectory, image)).then(() => {
+              desktopWindow.hide();
+              mainWindow.minimize();
+              mainWindow.hide();
+              event.sender.send('background-set');
+              ks.sendCombination(['windows', 'd']).then((a) => {
+                  console.log(a);
+              });
+          }).catch((error) => {
+              console.log(error);
+          });
+      }
+  });
 });

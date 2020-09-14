@@ -46,8 +46,10 @@
     "postpackage": "electron-packager ./ --out=./builds"
   },
   "dependencies": {
+    "node-key-sender": "^1.0.11",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "wallpaper": "^4.4.1"
   },
   "devDependencies": {
     "@babel/core": "^7.11.4",

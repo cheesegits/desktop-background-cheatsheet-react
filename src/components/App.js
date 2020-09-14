@@ -22,6 +22,12 @@ const App = () => {
   const [allFiles, setAllFiles] = useState([]);
   const [files, setFiles] = useState([]);
   const [index, setIndex] = useState("placeholder index");
+  const [backgroundImage, setBackgroundImage] = useState('');
+
+  useEffect(() => {
+    console.log('setting-background with: ', backgroundImage);
+    ipcRenderer.send('set-background', backgroundImage);
+  }, [backgroundImage]);
 
   // setting allFiles = directoryFiles
   ipcRenderer.on("all-files", (_, directoryFiles) => {
@@ -46,6 +52,7 @@ const App = () => {
         files={files}
         setFiles={setFiles}
         input={input}
+        setBackgroundImage={setBackgroundImage}
       />
     </div>
   );

@@ -2,7 +2,7 @@ console.log("dropdown.js loaded");
 
 import React, { useEffect } from "react";
 
-const Dropdown = ({ allFiles, files, setFiles, input }) => {
+const Dropdown = ({ allFiles, files, setFiles, input, setBackgroundImage }) => {
   console.log("Dropdown rendered");
   // console.log('files inside Dropdown', files);
 
@@ -12,6 +12,11 @@ const Dropdown = ({ allFiles, files, setFiles, input }) => {
     });
     return filteredFiles;
   };
+
+  const setDesktopBackground = (event) => {
+    setBackgroundImage(event.target.id);
+    setFiles([]);
+  }
 
   // renders all files or matching files
   useEffect(() => {
@@ -23,7 +28,7 @@ const Dropdown = ({ allFiles, files, setFiles, input }) => {
   }, [input]);
 
   const filesList = files.map((file) => (
-    <li key={file} id={file}>
+    <li key={file} id={file} onClick={setDesktopBackground}>
       {file}
     </li>
   ));
