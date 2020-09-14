@@ -1,8 +1,3 @@
-/** ISSUES & BUGS
- *
- * 1) is there a better location for useEffect?
- */
-
 console.log("input.js loaded");
 
 import React, { useState, useEffect } from "react";
@@ -26,7 +21,7 @@ const Input = ({ input, setInput, setFiles, allFiles }) => {
   };
 
   // toggle showing all files when input is clicked, but does nothing input has text
-  const toggleFiles = () => {
+  const toggleAllFiles = () => {
     if (placeholder === "Click to show all files") {
       setFiles(allFiles);
     } else if (placeholder === "Click to hide files") {
@@ -34,10 +29,12 @@ const Input = ({ input, setInput, setFiles, allFiles }) => {
     }
   };
 
-  // double function exection from click
+  // only when input is empty
   const onClick = () => {
-    toggleFiles();
-    togglePlaceholder();
+    if (input === "") {
+      toggleAllFiles();
+      togglePlaceholder();
+    }
   };
 
   // resets state of input and files
@@ -45,7 +42,6 @@ const Input = ({ input, setInput, setFiles, allFiles }) => {
     // 1)
     if (input === "") {
       setPlaceholder("Click to show all files");
-      setFiles([]);
     }
   }, [input]);
 

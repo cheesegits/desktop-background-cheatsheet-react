@@ -69,6 +69,8 @@ function createWindow() {
     // frame: false,
     hasShadow: false,
     backgroundColor: "#133337", // development only
+    width: 1600, // development only
+    height: 1200, // development only
     transparent: true,
     // resizable: false,
     x: screenWidth / 2 - 150,

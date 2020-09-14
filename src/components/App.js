@@ -1,6 +1,6 @@
 /** ISSUES & BUGS
  *
- * 1) App component renders twice in order for directoryFiles to be received and setAllFiles
+ * 1) App component renders twice in order for directoryFiles to be received
  */
 
 console.log("App.js loaded");
@@ -29,8 +29,6 @@ const App = () => {
     console.log("directoryFiles received, allFiles set to: ", directoryFiles); // 1)
   });
 
-  console.log("allFiles in App: ", allFiles); // 1)
-
   return (
     <div id="app">
       <div>
@@ -43,7 +41,12 @@ const App = () => {
         setFiles={setFiles}
         allFiles={allFiles}
       ></Input>
-      <Dropdown files={files} />
+      <Dropdown
+        allFiles={allFiles}
+        files={files}
+        setFiles={setFiles}
+        input={input}
+      />
     </div>
   );
 };
