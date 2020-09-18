@@ -16,9 +16,7 @@ fs.readdir(backgroundDirectory, (_, files) => {
   for (var i = 0; i < files.length; i++) {
     directoryFiles.push(files[i]);
   }
-  console.log("directoryFiles after push", directoryFiles);
 });
-// console.log("directoryFiles after push: ", directoryFiles);
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.

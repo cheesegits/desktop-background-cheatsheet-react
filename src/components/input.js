@@ -1,14 +1,6 @@
-/** ISSUES & BUGS
-*
-* 1) state at these lines are 1 setState behind
-*/
-
-console.log("input.js loaded");
-
 import React, { useState, useEffect } from "react";
 
 const Input = ({ input, setInput, setFiles, allFiles, tabComplete }) => {
-  console.log("Input rendered");
   const [placeholder, setPlaceholder] = useState("Click to show all files");
 
   // updates state of input with keystroke
@@ -52,9 +44,7 @@ const Input = ({ input, setInput, setFiles, allFiles, tabComplete }) => {
 
 useEffect(() => {
   // tabComplete does not work a second time
-  console.log('tabComplete initiated');
   setInput(tabComplete); // 2)
-  console.log('input value: ', document.getElementById("input").value);
   document.querySelector("#input").value = tabComplete;
 }, [tabComplete]);
 

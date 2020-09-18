@@ -6,7 +6,7 @@ import Input from "./input";
 import Dropdown from "./dropdown";
 
 const App = () => {
-  console.log("App rendered");
+
   const [allFiles, setAllFiles] = useState([]);
   const [files, setFiles] = useState([]);
   const [input, setInput] = useState("");
@@ -25,25 +25,16 @@ const App = () => {
 
     switch (key) {
       case "ArrowUp":
-        console.log("Arrow Up!");
         break;
       case "ArrowDown":
-        console.log("Arrow Down!");
         break;
       case "Tab":
-        console.log("-Tab- input: ", input);
-        console.log(
-          "-Tab- autocomplete (files[0]) is behind by 1 update: ",
-          files
-        ); // 2)
         setTabComplete(files[0]);
         break;
       case "Enter":
-        console.log("files[0]: ", files[0]);
         setBackgroundImage(files[0]);
         break;
       default:
-        console.log("Keystroke: ", key);
     }
   };
 
@@ -68,14 +59,12 @@ const App = () => {
 
   // sets desktop background when backgroundImage updated
   useEffect(() => {
-    console.log("setting-background with: ", backgroundImage);
     ipcRenderer.send("set-background", backgroundImage);
   }, [backgroundImage]);
 
   // setting allFiles = directoryFiles
   ipcRenderer.on("all-files", (_, directoryFiles) => {
     setAllFiles(directoryFiles);
-    console.log("directoryFiles received, allFiles set to: ", directoryFiles); // 1)
   });
 
   return (
@@ -91,14 +80,11 @@ const App = () => {
         tabComplete={tabComplete}
       ></Input>
       <Dropdown
-        allFiles={allFiles}
         files={files}
         setFiles={setFiles}
-        input={input}
         setBackgroundImage={setBackgroundImage}
         highlightedFile={highlightedFile}
         setHighlightedFile={setHighlightedFile}
-        setTabComplete={tabComplete}
       />
     </div>
   );
