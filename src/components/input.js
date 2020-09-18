@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
-const Input = ({ input, setInput, setFiles, allFiles, tabComplete }) => {
-  const [placeholder, setPlaceholder] = useState("Click to show all files");
+const Input = ({ input, setInput, placeholder, setPlaceholder, setFiles, allFiles, handleKeyUp }) => {
 
   // updates state of input with keystroke
   const updateInput = (event) => {
@@ -28,33 +27,22 @@ const Input = ({ input, setInput, setFiles, allFiles, tabComplete }) => {
 
   // only when input is empty
   const onClick = () => {
-    if (input === "") {
+    if (!input) {
       toggleAllFiles();
       togglePlaceholder();
     }
   };
 
-  // resets state of input and files
-  useEffect(() => {
-    // 1)
-    if (input === "") {
-      setPlaceholder("Click to show all files");
-    }
-  }, [input]);
-
-useEffect(() => {
-  // tabComplete does not work a second time
-  setInput(tabComplete); // 2)
-  document.querySelector("#input").value = tabComplete;
-}, [tabComplete]);
-
+  // value, on first render, came back undefined... even though initial state of input is ""
   return (
     <div>
       <input
         id="input"
         onChange={updateInput}
         onClick={onClick}
+        onKeyUp={handleKeyUp}
         placeholder={placeholder}
+        value={input}
       ></input>
     </div>
   );

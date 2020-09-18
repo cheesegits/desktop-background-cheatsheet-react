@@ -6,15 +6,13 @@ import Input from "./input";
 import Dropdown from "./dropdown";
 
 const App = () => {
-
   const [allFiles, setAllFiles] = useState([]);
   const [files, setFiles] = useState([]);
   const [input, setInput] = useState("");
-  const [tabComplete, setTabComplete] = useState(""); // 2)
   const [highlightedFile, setHighlightedFile] = useState("");
   const [backgroundImage, setBackgroundImage] = useState("");
-  const [placeHolder, setPlaceholder] = useState("Click to show all files");
-  
+  const [placeholder, setPlaceholder] = useState("Click to show all files");
+
   useEffect(() => {
     ipcRenderer.send("App-onMount");
   }, []);
@@ -29,7 +27,7 @@ const App = () => {
       case "ArrowDown":
         break;
       case "Tab":
-        setTabComplete(files[0]);
+        setInput(files[0]);
         break;
       case "Enter":
         setBackgroundImage(files[0]);
@@ -60,6 +58,9 @@ const App = () => {
   // sets desktop background when backgroundImage updated
   useEffect(() => {
     ipcRenderer.send("set-background", backgroundImage);
+    setInput("");
+    setPlaceholder("Click to show all files");
+    setFiles([]);
   }, [backgroundImage]);
 
   // setting allFiles = directoryFiles
@@ -69,19 +70,17 @@ const App = () => {
 
   return (
     <div id="app">
-      <div>
-        <h4>Input: {input}</h4>
-      </div>
       <Input
         input={input}
         setInput={setInput}
+        placeholder={placeholder}
+        setPlaceholder={setPlaceholder}
         setFiles={setFiles}
         allFiles={allFiles}
-        tabComplete={tabComplete}
+        handleKeyUp={handleKeyUp}
       ></Input>
       <Dropdown
         files={files}
-        setFiles={setFiles}
         setBackgroundImage={setBackgroundImage}
         highlightedFile={highlightedFile}
         setHighlightedFile={setHighlightedFile}

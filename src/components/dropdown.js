@@ -2,7 +2,6 @@ import React from "react";
 
 const Dropdown = ({
   files,
-  setFiles,
   setBackgroundImage,
   highlightedFile,
   setHighlightedFile,
@@ -10,7 +9,6 @@ const Dropdown = ({
 
   const setDesktopBackground = () => {
     setBackgroundImage(highlightedFile);
-    setFiles([]);
   };
 
   const updateHighlighted = (event) => {
