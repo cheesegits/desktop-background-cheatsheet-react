@@ -1,21 +1,9 @@
-/** ISSUES & BUGS
- *
- * 1) App component renders twice in order for directoryFiles to be received
- * 2) state at these lines are 1 setState behind
- */
-
-console.log("App.js loaded");
-
 import "../assets/css/App.css";
 import React, { useState, useEffect } from "react";
 import { ipcRenderer } from "electron";
 
 import Input from "./input";
 import Dropdown from "./dropdown";
-
-// sends request to main.js one time for directoryFiles
-ipcRenderer.send("App-onMount");
-console.log("request for directoryFiles sent");
 
 const App = () => {
   console.log("App rendered");
@@ -25,6 +13,11 @@ const App = () => {
   const [tabComplete, setTabComplete] = useState(""); // 2)
   const [highlightedFile, setHighlightedFile] = useState("");
   const [backgroundImage, setBackgroundImage] = useState("");
+  const [placeHolder, setPlaceholder] = useState("Click to show all files");
+  
+  useEffect(() => {
+    ipcRenderer.send("App-onMount");
+  }, []);
 
   // fringe case keystrokes only - input.js updates input with onChange value
   const handleKeyUp = (event) => {
@@ -52,26 +45,25 @@ const App = () => {
       default:
         console.log("Keystroke: ", key);
     }
+  };
 
-    //   const newLetter = (keyCode) => {
-    //     // lower and uppercase letters use same keyCode?
-    //     if (
-    //       (keyCode > 64 && keyCode < 91) ||
-    //       (keyCode > 96 && keyCode < 123) ||
-    //       keyCode == 8
-    //     ) {
-    //       console.log("keyCode of text character: ", keyCode);
-    //     }
-    //   };
-    //   newLetter(keyCode);
+  const filterMatchingFiles = (allFiles, input) => {
+    const filteredFiles = allFiles.filter((file) => {
+      return file.toLowerCase().match(input.toLowerCase());
+    });
+    return filteredFiles;
   };
 
   // listener for keystrokes
   useEffect(() => {
-    window.addEventListener("keyup", handleKeyUp);
-    return () => {
-      window.removeEventListener("keyup", handleKeyUp);
-    };
+    if (!input) {
+      setFiles([]);
+      setHighlightedFile("");
+      setBackgroundImage("");
+      setPlaceholder("Click to show all files");
+    } else {
+      setFiles(filterMatchingFiles(allFiles, input));
+    }
   }, [input]);
 
   // sets desktop background when backgroundImage updated
