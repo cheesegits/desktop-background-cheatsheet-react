@@ -36,10 +36,5 @@ input:focus {
 }
 
 ul li:hover {
-  background-color: #175ca1;
   cursor: pointer;
-}
-
-.highlight {
-  background-color: #175ca1;
 }

@@ -19,23 +19,48 @@ const App = () => {
 
   // fringe case keystrokes only - input.js updates input with onChange value
   const handleKeyUp = (event) => {
-    const { key, keyCode } = event;
+    const { key } = event;
 
+    // setHighlightedFile via arrows
+    const arrowHighlight = (key) => {
+      if (highlightedFile === files[0] && key === "ArrowUp") {
+        setHighlightedFile(files[files.length - 1]);
+      } else if (
+        highlightedFile === files[files.length - 1] &&
+        key === "ArrowDown"
+      ) {
+        setHighlightedFile(files[0]);
+      } else {
+        for (let i = 0; i < files.length; i++) {
+          if (files[i] === highlightedFile && key === "ArrowUp") {
+            setHighlightedFile(files[i - 1]);
+          } else if (files[i] === highlightedFile && key === "ArrowDown") {
+            setHighlightedFile(files[i + 1]);
+          }
+        }
+      }
+    };
+
+    // handles non-input keystrokes
     switch (key) {
       case "ArrowUp":
+        arrowHighlight(key);
         break;
       case "ArrowDown":
+        arrowHighlight(key);
         break;
       case "Tab":
-        setInput(files[0]);
+        setInput(highlightedFile);
         break;
       case "Enter":
-        setBackgroundImage(files[0]);
+        setBackgroundImage(highlightedFile);
         break;
       default:
+        break;
     }
   };
 
+  // filter files based on input value
   const filterMatchingFiles = (allFiles, input) => {
     const filteredFiles = allFiles.filter((file) => {
       return file.toLowerCase().match(input.toLowerCase());
@@ -52,6 +77,8 @@ const App = () => {
       setPlaceholder("Click to show all files");
     } else {
       setFiles(filterMatchingFiles(allFiles, input));
+      console.log(files);
+      setHighlightedFile(files[0]);
     }
   }, [input]);
 
@@ -78,6 +105,7 @@ const App = () => {
         setFiles={setFiles}
         allFiles={allFiles}
         handleKeyUp={handleKeyUp}
+        setHighlightedFile={setHighlightedFile}
       ></Input>
       <Dropdown
         files={files}

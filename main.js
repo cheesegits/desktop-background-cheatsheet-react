@@ -67,16 +67,16 @@ function createWindow() {
     show: false,
     parent: desktopWindow,
     webPreferences: { nodeIntegration: true, textAreasAreResizable: false },
-    // frame: false,
     hasShadow: false,
-    backgroundColor: "#133337", // development only
-    width: 1600, // development only
-    height: 1200, // development only
     transparent: true,
-    // resizable: false,
     x: screenWidth / 2 - 150,
     y: screenHeight / 2 - 150,
     useContentSize: true,
+    // frame: false, // false for production
+    // resizable: false, // false for production
+    backgroundColor: "#133337", // development only
+    width: 1600, // development only
+    height: 1200, // development only
   });
 
   // and load the index.html of the app.
@@ -98,6 +98,9 @@ function createWindow() {
   }
 
   mainWindow.loadURL(indexPath);
+  mainWindow.webContents.openDevTools();
+  // mainWindow.minimize();
+
 
   globalShortcut.register("Alt+D", () => {
     if (mainWindow.isFocused()) {
@@ -105,8 +108,8 @@ function createWindow() {
       mainWindow.minimize();
       mainWindow.hide();
     } else {
-      // desktopWindow.show();
       mainWindow.show();
+      // desktopWindow.show(); // show for development
     }
   });
 

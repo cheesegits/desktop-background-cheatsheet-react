@@ -6,21 +6,34 @@ const Dropdown = ({
   highlightedFile,
   setHighlightedFile,
 }) => {
-
   const setDesktopBackground = () => {
     setBackgroundImage(highlightedFile);
   };
 
-  const updateHighlighted = (event) => {
+  // highlight onMouseOver
+  const mouseHighlight = (event) => {
     setHighlightedFile(event.target.getAttribute("id"));
   };
 
-  const filesList = files.map((file, index) => (
+  // logic to toggle highlight
+  const highlightFile = (file, highlightedFile) => {
+    if (highlightedFile === file) {
+      return { backgroundColor: "#175ca1" };
+    }
+  };
+
+  // restore highlightedFile to files[0] on mouseLeave
+  const mouseLeave = (_) => {
+    setHighlightedFile(files[0]);
+  };
+
+  // does not properly highlight files[0] after "Tab" autofill of input, 1 render behind
+  const filesList = files.map(file => (
     <li
+      style={highlightFile(file, highlightedFile)} // html doesn't look clean when highlightFile ends up false
       key={file}
       id={file}
-      index={index}
-      onMouseOver={updateHighlighted}
+      onMouseOver={mouseHighlight}
       onClick={setDesktopBackground}
     >
       {file}
@@ -29,7 +42,7 @@ const Dropdown = ({
 
   return (
     <div>
-      <ul>{filesList}</ul>
+      <ul onMouseLeave={mouseLeave}>{filesList}</ul>
     </div>
   );
 };

@@ -1,7 +1,15 @@
 import React from "react";
 
-const Input = ({ input, setInput, placeholder, setPlaceholder, setFiles, allFiles, handleKeyUp }) => {
-
+const Input = ({
+  input,
+  setInput,
+  placeholder,
+  setPlaceholder,
+  setFiles,
+  allFiles,
+  handleKeyUp,
+  setHighlightedFile,
+}) => {
   // updates state of input with keystroke
   const updateInput = (event) => {
     setInput(event.target.value);
@@ -20,8 +28,10 @@ const Input = ({ input, setInput, placeholder, setPlaceholder, setFiles, allFile
   const toggleAllFiles = () => {
     if (placeholder === "Click to show all files") {
       setFiles(allFiles);
+      setHighlightedFile(allFiles[0]);
     } else if (placeholder === "Click to hide files") {
       setFiles([]);
+      setHighlightedFile("");
     }
   };
 
@@ -33,7 +43,6 @@ const Input = ({ input, setInput, placeholder, setPlaceholder, setFiles, allFile
     }
   };
 
-  // value, on first render, came back undefined... even though initial state of input is ""
   return (
     <div>
       <input
@@ -43,6 +52,7 @@ const Input = ({ input, setInput, placeholder, setPlaceholder, setFiles, allFile
         onKeyUp={handleKeyUp}
         placeholder={placeholder}
         value={input}
+        autoFocus={true}
       ></input>
     </div>
   );
