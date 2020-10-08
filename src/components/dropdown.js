@@ -27,7 +27,6 @@ const Dropdown = ({
     setHighlightedFile(files[0]);
   };
 
-  // does not properly highlight files[0] after "Tab" autofill of input, 1 render behind
   const filesList = files.map(file => (
     <li
       style={highlightFile(file, highlightedFile)} // html doesn't look clean when highlightFile ends up false

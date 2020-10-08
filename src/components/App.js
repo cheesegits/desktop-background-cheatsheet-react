@@ -63,7 +63,7 @@ const App = () => {
   // filter files based on input value
   const filterMatchingFiles = (allFiles, input) => {
     const filteredFiles = allFiles.filter((file) => {
-      return file.toLowerCase().match(input.toLowerCase());
+      return file.toLowerCase().match(input.toLowerCase()); // ".j" includes "-j" result, but "-j" does not include ".j" results 
     });
     return filteredFiles;
   };
@@ -77,10 +77,12 @@ const App = () => {
       setPlaceholder("Click to show all files");
     } else {
       setFiles(filterMatchingFiles(allFiles, input));
-      console.log(files);
-      setHighlightedFile(files[0]);
     }
   }, [input]);
+  
+  useEffect(() => {
+    setHighlightedFile(files[0]);
+  }, [files])
 
   // sets desktop background when backgroundImage updated
   useEffect(() => {
