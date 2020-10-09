@@ -38,3 +38,7 @@ input:focus {
 ul li:hover {
   cursor: pointer;
 }
+
+.substring {
+  color: rgb(126, 252, 241);
+}

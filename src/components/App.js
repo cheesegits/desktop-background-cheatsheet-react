@@ -80,9 +80,10 @@ const App = () => {
     }
   }, [input]);
   
+  // highlight files[0] whenever files change
   useEffect(() => {
     setHighlightedFile(files[0]);
-  }, [files])
+  }, [files]);
 
   // sets desktop background when backgroundImage updated
   useEffect(() => {
@@ -111,6 +112,7 @@ const App = () => {
       ></Input>
       <Dropdown
         files={files}
+        input={input}
         setBackgroundImage={setBackgroundImage}
         highlightedFile={highlightedFile}
         setHighlightedFile={setHighlightedFile}

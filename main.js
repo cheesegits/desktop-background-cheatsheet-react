@@ -55,7 +55,7 @@ function createWindow() {
   } = screen.getPrimaryDisplay().workAreaSize;
 
   desktopWindow = new BrowserWindow({
-    show: false,
+    show: true, // true for development
     width: screenWidth,
     height: screenHeight,
     backgroundColor: "#133337",
@@ -72,11 +72,11 @@ function createWindow() {
     x: screenWidth / 2 - 150,
     y: screenHeight / 2 - 150,
     useContentSize: true,
-    // frame: false, // false for production
-    // resizable: false, // false for production
-    backgroundColor: "#133337", // development only
-    width: 1600, // development only
-    height: 1200, // development only
+    frame: false, // false for production
+    resizable: false, // false for production
+    // backgroundColor: "#133337", // development only
+    // width: 1600, // development only
+    // height: 1200, // development only
   });
 
   // and load the index.html of the app.
@@ -98,7 +98,7 @@ function createWindow() {
   }
 
   mainWindow.loadURL(indexPath);
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools(); // for development only
   // mainWindow.minimize();
 
 
@@ -109,7 +109,7 @@ function createWindow() {
       mainWindow.hide();
     } else {
       mainWindow.show();
-      // desktopWindow.show(); // show for development
+      desktopWindow.show(); // show for production
     }
   });
 
@@ -127,7 +127,7 @@ function createWindow() {
       installExtension(REACT_DEVELOPER_TOOLS).catch((err) =>
         console.log("Error loading React DevTools: ", err)
       );
-      mainWindow.webContents.openDevTools();
+      // mainWindow.webContents.openDevTools(); // for development only
     }
   });
 
