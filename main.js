@@ -1,30 +1,48 @@
 "use strict";
 
 // Import parts of electron to use
-const { app, BrowserWindow, ipcMain, globalShortcut } = require("electron");
+const {
+  app,
+  BrowserWindow,
+  Tray,
+  Menu,
+  dialog,
+  ipcMain,
+  globalShortcut,
+} = require("electron");
 const fs = require("fs");
 const path = require("path");
 const url = require("url");
 
-const wallpaper = require('wallpaper');
-const ks = require('node-key-sender');
+const wallpaper = require("wallpaper");
+const ks = require("node-key-sender");
 
-const backgroundDirectory = path.join(__dirname, "./assets");
-const directoryFiles = [];
+let directoryFiles = [];
 
-fs.readdir(backgroundDirectory, (_, files) => {
-  for (var i = 0; i < files.length; i++) {
-    directoryFiles.push(files[i]);
-  }
-});
+let backgroundDirectory = path.join(__dirname, "./assets");
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let desktopWindow;
 let mainWindow;
 
+let tray = null;
+
 // Keep a reference for dev mode
 let dev = false;
+
+const getDirectoryFiles = (path) => {
+  fs.readdir(path, (_, files) => {
+    const newFiles = [];
+    for (var i = 0; i < files.length; i++) {
+      newFiles.push(files[i]);
+    }
+    directoryFiles = newFiles;
+    mainWindow.webContents.send("all-files", directoryFiles); // memory leak?
+  });
+};
+
+getDirectoryFiles(backgroundDirectory);
 
 // Broken:
 // if (process.defaultApp || /[\\/]electron-prebuilt[\\/]/.test(process.execPath) || /[\\/]electron[\\/]/.test(process.execPath)) {
@@ -46,6 +64,40 @@ if (process.platform === "win32") {
 }
 
 function createWindow() {
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: "Open",
+      click: () => {
+        desktopWindow.show();
+        mainWindow.show();
+      },
+    },
+    {
+      label: "Change Folder",
+      click: () => {
+        dialog
+          .showOpenDialog({
+            properties: ["openDirectory"],
+            filters: [
+              {
+                name: "Images",
+                extensions: ['jpg', 'png', 'gif', 'jfif']
+              }
+            ]
+          })
+          .then((result) => {
+            backgroundDirectory = path.normalize(`${result.filePaths}`);
+          })
+          .then(() => {
+            getDirectoryFiles(backgroundDirectory);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      },
+    },
+  ]);
+
   // Create the browser window.
   const { screen } = require("electron");
 
@@ -55,7 +107,7 @@ function createWindow() {
   } = screen.getPrimaryDisplay().workAreaSize;
 
   desktopWindow = new BrowserWindow({
-    show: true, // true for development
+    show: false, // true for development
     width: screenWidth,
     height: screenHeight,
     backgroundColor: "#133337",
@@ -72,11 +124,11 @@ function createWindow() {
     x: screenWidth / 2 - 150,
     y: screenHeight / 2 - 150,
     useContentSize: true,
-    frame: false, // false for production
-    resizable: false, // false for production
-    // backgroundColor: "#133337", // development only
-    // width: 1600, // development only
-    // height: 1200, // development only
+    // frame: false, // false for production
+    // resizable: false, // false for production
+    backgroundColor: "#133337", // development only
+    width: 1600, // development only
+    height: 1200, // development only
   });
 
   // and load the index.html of the app.
@@ -98,9 +150,8 @@ function createWindow() {
   }
 
   mainWindow.loadURL(indexPath);
-  // mainWindow.webContents.openDevTools(); // for development only
+  mainWindow.webContents.openDevTools(); // for development only
   // mainWindow.minimize();
-
 
   globalShortcut.register("Alt+D", () => {
     if (mainWindow.isFocused()) {
@@ -109,9 +160,13 @@ function createWindow() {
       mainWindow.hide();
     } else {
       mainWindow.show();
-      desktopWindow.show(); // show for production
+      // desktopWindow.show(); // show for production
     }
   });
+
+  tray = new Tray("cs-logo 32x32.png"); // issue: does not automatically remove tray icon on exit
+  tray.setToolTip("~~MAKE NEW ICON~~");
+  tray.setContextMenu(contextMenu);
 
   // Don't show until we are ready and loaded
   mainWindow.once("ready-to-show", () => {
@@ -127,7 +182,7 @@ function createWindow() {
       installExtension(REACT_DEVELOPER_TOOLS).catch((err) =>
         console.log("Error loading React DevTools: ", err)
       );
-      // mainWindow.webContents.openDevTools(); // for development only
+      mainWindow.webContents.openDevTools(); // for development only
     }
   });
 
@@ -165,26 +220,29 @@ app.on("activate", () => {
 ipcMain.on("App-onMount", (event) => {
   event.sender.send("all-files", directoryFiles);
 });
-ipcMain.on('set-background', (event, backgroundName) => {
+ipcMain.on("set-background", (event, backgroundName) => {
   fs.readdir(backgroundDirectory, (error, files) => {
-      if (error) {
-          console.log(error);
-      } else {
-          const image = files.find((name) => name === backgroundName);
-          if (!image) {
-              return;
-          }
-          wallpaper.set(path.join(backgroundDirectory, image)).then(() => {
-              desktopWindow.hide();
-              mainWindow.minimize();
-              mainWindow.hide();
-              event.sender.send('background-set');
-              ks.sendCombination(['windows', 'd']).then((a) => {
-                  console.log(a);
-              });
-          }).catch((error) => {
-              console.log(error);
-          });
+    if (error) {
+      console.log(error);
+    } else {
+      const image = files.find((name) => name === backgroundName);
+      if (!image) {
+        return;
       }
+      wallpaper
+        .set(path.join(backgroundDirectory, image))
+        .then(() => {
+          desktopWindow.hide();
+          mainWindow.minimize();
+          mainWindow.hide();
+          event.sender.send("background-set");
+          ks.sendCombination(["windows", "d"]).then((a) => {
+            console.log(a);
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   });
 });
