@@ -1,9 +1,13 @@
-import "../../assets/css/app.css";
 import React, { useState, useEffect } from "react";
 import { ipcRenderer } from "electron";
 
+import "./app.css";
+
+import filterMatchingFiles from "./filterMatchingFiles"
+
 import Input from "../input/input";
 import Dropdown from "../dropdown/dropdown";
+
 
 const App = () => {
   const [allFiles, setAllFiles] = useState([]);
@@ -12,11 +16,7 @@ const App = () => {
   const [highlightedFile, setHighlightedFile] = useState("");
   const [backgroundImage, setBackgroundImage] = useState("");
   const [placeholder, setPlaceholder] = useState("Click to show all files");
-
-  useEffect(() => {
-    ipcRenderer.send("App-onMount");
-  }, []);
-
+  
   // fringe case keystrokes only - input.js updates input with onChange value
   const handleKeyUp = (event) => {
     const { key } = event;
@@ -60,14 +60,6 @@ const App = () => {
     }
   };
 
-  // filter files based on input value
-  const filterMatchingFiles = (allFiles, input) => {
-    const filteredFiles = allFiles.filter((file) => {
-      return file.toLowerCase().match(input.toLowerCase()); // ".j" includes "-j" result, but "-j" does not include ".j" results 
-    });
-    return filteredFiles;
-  };
-
   // listener for keystrokes
   useEffect(() => {
     if (!input) {
@@ -93,6 +85,10 @@ const App = () => {
     setFiles([]);
   }, [backgroundImage]);
 
+  useEffect(() => {
+    ipcRenderer.send("App-onMount");
+  }, []);
+  
   // setting allFiles = directoryFiles
   ipcRenderer.on("all-files", (_, directoryFiles) => {
     setAllFiles(directoryFiles);

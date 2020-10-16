@@ -1,5 +1,10 @@
 import React from "react";
 
+import "./dropdown.css"
+
+import highlightFile from "./highlightFile"
+import highlightSubstrings from "./highlightSubstrings";
+
 const Dropdown = ({
   files,
   input,
@@ -11,13 +16,6 @@ const Dropdown = ({
   const setDesktopBackground = () => {
     setBackgroundImage(highlightedFile);
   };
-
-  // CSS highlight li
-  const highlightFile = (file, highlightedFile) => {
-    if (highlightedFile === file) {
-      return { backgroundColor: "#175ca1" };
-    }
-  };
   
   // highlight li via onMouseOver
   const mouseHighlight = (event) => {
@@ -25,16 +23,10 @@ const Dropdown = ({
   };
   
   // reset li highlighting on mouseLeave of ul
-  const mouseLeave = (_) => {
+  const resetHighlight = (_) => {
     setHighlightedFile(files[0]);
   };
   
-  // highlight matching search text in li
-  const highlightSubstrings = (file, substring) => {
-    const fileLowerCase = file.toLowerCase(file);
-    const index = fileLowerCase.indexOf(substring);
-    return `${file.substring(0, index)}<span class="substring">${file.substring(index, index + substring.length)}</span>${file.substring(index+substring.length, file.length)}`
-  }
 
   const filesList = files.map(file => (
     <li
@@ -53,7 +45,7 @@ const Dropdown = ({
 
   return (
     <div>
-      <ul onMouseLeave={mouseLeave}>{filesList}</ul>
+      <ul onMouseLeave={resetHighlight}>{filesList}</ul>
     </div>
   );
 };

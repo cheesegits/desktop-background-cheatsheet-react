@@ -1,5 +1,10 @@
 import React from "react";
 
+import "./input.css"
+
+import {togglePlaceholder} from "./onClick"
+import {toggleAllFiles} from "./onClick"
+
 const Input = ({
   input,
   setInput,
@@ -10,44 +15,25 @@ const Input = ({
   handleKeyUp,
   setHighlightedFile,
 }) => {
-  // updates state of input with keystroke
-  const updateInput = (event) => {
-    setInput(event.target.value);
-  };
 
-  // toggle placeholder text
-  const togglePlaceholder = () => {
-    if (placeholder === "Click to show all files") {
-      setPlaceholder("Click to hide files");
-    } else if (placeholder === "Click to hide files") {
-      setPlaceholder("Click to show all files");
-    }
-  };
+    // updates state of input with keystroke
+const onChange = (event) => {
+  setInput(event.target.value);
+};
 
-  // toggle showing all files when input is clicked
-  const toggleAllFiles = () => {
-    if (placeholder === "Click to show all files") {
-      setFiles(allFiles);
-      setHighlightedFile(allFiles[0]);
-    } else if (placeholder === "Click to hide files") {
-      setFiles([]);
-      setHighlightedFile("");
-    }
-  };
-
-  // only when input is empty
-  const onClick = () => {
-    if (!input) {
-      toggleAllFiles();
-      togglePlaceholder();
-    }
-  };
+ // toggles list of files only when input is empty
+ const onClick = (_) => {
+  if (!input) {
+    toggleAllFiles(placeholder, setFiles, allFiles, setHighlightedFile);
+    togglePlaceholder(placeholder, setPlaceholder);
+  }
+};
 
   return (
     <div>
       <input
-        id="input"
-        onChange={updateInput}
+        id={input}
+        onChange={onChange}
         onClick={onClick}
         onKeyUp={handleKeyUp}
         placeholder={placeholder}
