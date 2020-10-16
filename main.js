@@ -19,7 +19,7 @@ const ks = require("node-key-sender");
 
 let directory = path.join(__dirname, "./assets");
 
-let DirectoryImages = [];
+let directoryImages = [];
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -32,27 +32,26 @@ let tray = null;
 let dev = false;
 
 const filterByExtensions = (newFiles) => {
-  const approvedExtensions = ['.jpg', '.jfif', '.png'];
+  const approvedExtensions = [".jpg", ".jfif", ".png"];
   const filteredFiles = [];
   newFiles.forEach((file) => {
-    const fileExtension = file.substr((file.lastIndexOf('.')));
-    for (let i = 0; i < approvedExtensions.length; i++ ) {
+    const fileExtension = file.substr(file.lastIndexOf("."));
+    for (let i = 0; i < approvedExtensions.length; i++) {
       if (approvedExtensions[i] === fileExtension) {
         filteredFiles.push(file);
       }
     }
   });
   return filteredFiles;
-}
+};
 
 const getDirectoryImages = (path) => {
   fs.readdir(path, (_, files) => {
     directoryImages = filterByExtensions(files);
     mainWindow.webContents.send("all-files", directoryImages); // memory leak
   });
-  getDirectoryImages(directory);
-  
 };
+getDirectoryImages(directory);
 
 // Broken:
 // if (process.defaultApp || /[\\/]electron-prebuilt[\\/]/.test(process.execPath) || /[\\/]electron[\\/]/.test(process.execPath)) {
@@ -88,12 +87,12 @@ function createWindow() {
         dialog
           .showOpenDialog({
             properties: ["openDirectory"],
+          })
+          .then((result) => {
             directory = path.normalize(`${result.filePaths}`);
-            .then((result) => {
-            })
+          })
+          .then(() => {
             getDirectoryImages(directory);
-            .then(() => {
-            })
           })
           .catch((err) => {
             console.log(err);
@@ -221,20 +220,20 @@ app.on("activate", () => {
   }
 });
 
-ipcMain.on("App-onMount", (event) => {
-  event.sender.send("all-files", DirectoryImages);
+ipcMain.on("App-onMount", (event, backgroundName) => {
+  event.sender.send("all-files", directoryImages);
+});
+ipcMain.on("set-background", (event, backgroundName) => {
   fs.readdir(directory, (error, files) => {
-    ipcMain.on("set-background", (event, backgroundName) => {
-    });
     if (error) {
       console.log(error);
     } else {
       const image = files.find((name) => name === backgroundName);
       if (!image) {
         return;
-        .set(path.join(directory, image))
-        wallpaper
       }
+      wallpaper
+        .set(path.join(directory, image))
         .then(() => {
           desktopWindow.hide();
           mainWindow.minimize();

@@ -1,9 +1,9 @@
-import "../assets/css/App.css";
+import "../../assets/css/app.css";
 import React, { useState, useEffect } from "react";
 import { ipcRenderer } from "electron";
 
-import Input from "./input";
-import Dropdown from "./dropdown";
+import Input from "../input/input";
+import Dropdown from "../dropdown/dropdown";
 
 const App = () => {
   const [allFiles, setAllFiles] = useState([]);
