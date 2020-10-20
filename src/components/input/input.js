@@ -39,6 +39,7 @@ const onChange = (event) => {
         placeholder={placeholder}
         value={input}
         autoFocus={true}
+        spellCheck={false}
       ></input>
     </div>
   );
