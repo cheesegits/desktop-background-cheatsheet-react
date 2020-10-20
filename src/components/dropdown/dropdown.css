@@ -3,7 +3,7 @@ ul {
   list-style-type: none;
   margin: 0;
   width: 100%;
-  background: #000;
+  background: #6b6b6b;
 }
 
 ul li {
@@ -11,7 +11,7 @@ ul li {
   padding: 5px;
   transition: background-color 0.1s;
   opacity: 1;
-  color: #fff;
+  color: #ffb900;
 }
 
 ul li:hover {
@@ -19,5 +19,5 @@ ul li:hover {
 }
 
 .substring {
-  color: rgb(126, 252, 241);
+  color: #fff;
 }

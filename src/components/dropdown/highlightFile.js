@@ -1,7 +1,7 @@
   // CSS highlight li
   const highlightFile = (file, highlightedFile) => {
     if (highlightedFile === file) {
-      return { backgroundColor: "#175ca1" };
+      return { backgroundColor: "#00A4EF" };
     }
   };
 

@@ -23,7 +23,7 @@ let directoryImages = [];
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let desktopWindow;
+// let desktopWindow;
 let mainWindow;
 
 let tray = null;
@@ -77,7 +77,7 @@ function createWindow() {
     {
       label: "Open",
       click: () => {
-        desktopWindow.show();
+        // desktopWindow.show();
         mainWindow.show();
       },
     },
@@ -109,28 +109,28 @@ function createWindow() {
     height: screenHeight,
   } = screen.getPrimaryDisplay().workAreaSize;
 
-  desktopWindow = new BrowserWindow({
-    show: false, // true for development
-    width: screenWidth,
-    height: screenHeight,
-    backgroundColor: "#133337",
-    opacity: 0.9, // production 0.9ish
-    focusable: false,
-    frame: false,
-  });
+  // desktopWindow = new BrowserWindow({
+  //   show: false, // true for development
+  //   width: screenWidth,
+  //   height: screenHeight,
+  //   // backgroundColor: "#133337",
+  //   opacity: 0.9, // production 0.9ish
+  //   focusable: false,
+  //   frame: false,
+  // });
   mainWindow = new BrowserWindow({
     show: false,
-    parent: desktopWindow,
+    // parent: desktopWindow,
     webPreferences: { nodeIntegration: true, textAreasAreResizable: false },
     hasShadow: false,
     transparent: true,
     x: screenWidth / 2 - 150,
     y: screenHeight / 2 - 150,
     useContentSize: true,
-    // frame: false, // false for production
-    // resizable: false, // false for production
-    backgroundColor: "#133337", // development only
-    width: 1600, // development only
+    frame: false, // false for production
+    resizable: false, // false for production
+    // backgroundColor: "#133337", // development only
+    // width: 1600, // development only
     height: 1200, // development only
   });
 
@@ -153,12 +153,12 @@ function createWindow() {
   }
 
   mainWindow.loadURL(indexPath);
-  mainWindow.webContents.openDevTools(); // for development only
+  // mainWindow.webContents.openDevTools(); // for development only
   // mainWindow.minimize();
 
   globalShortcut.register("Alt+D", () => {
     if (mainWindow.isFocused()) {
-      desktopWindow.hide();
+      // desktopWindow.hide();
       mainWindow.minimize();
       mainWindow.hide();
     } else {
@@ -185,7 +185,7 @@ function createWindow() {
       installExtension(REACT_DEVELOPER_TOOLS).catch((err) =>
         console.log("Error loading React DevTools: ", err)
       );
-      mainWindow.webContents.openDevTools(); // for development only
+      // mainWindow.webContents.openDevTools(); // for development only
     }
   });
 
@@ -235,7 +235,7 @@ ipcMain.on("set-background", (event, backgroundName) => {
       wallpaper
         .set(path.join(directory, image))
         .then(() => {
-          desktopWindow.hide();
+          // desktopWindow.hide();
           mainWindow.minimize();
           mainWindow.hide();
           event.sender.send("background-set");

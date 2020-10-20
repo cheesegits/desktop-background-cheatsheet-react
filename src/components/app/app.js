@@ -3,11 +3,10 @@ import { ipcRenderer } from "electron";
 
 import "./app.css";
 
-import filterMatchingFiles from "./filterMatchingFiles"
+import filterMatchingFiles from "./filterMatchingFiles";
 
 import Input from "../input/input";
 import Dropdown from "../dropdown/dropdown";
-
 
 const App = () => {
   const [allFiles, setAllFiles] = useState([]);
@@ -16,7 +15,7 @@ const App = () => {
   const [highlightedFile, setHighlightedFile] = useState("");
   const [backgroundImage, setBackgroundImage] = useState("");
   const [placeholder, setPlaceholder] = useState("Click to show all files");
-  
+
   // fringe case keystrokes only - input.js updates input with onChange value
   const handleKeyUp = (event) => {
     const { key } = event;
@@ -71,7 +70,7 @@ const App = () => {
       setFiles(filterMatchingFiles(allFiles, input));
     }
   }, [input]);
-  
+
   // highlight files[0] whenever files change
   useEffect(() => {
     setHighlightedFile(files[0]);
@@ -88,7 +87,7 @@ const App = () => {
   useEffect(() => {
     ipcRenderer.send("App-onMount");
   }, []);
-  
+
   // setting allFiles = directoryFiles
   ipcRenderer.on("all-files", (_, directoryFiles) => {
     setAllFiles(directoryFiles);
