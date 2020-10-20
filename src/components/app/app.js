@@ -50,6 +50,7 @@ const App = () => {
         break;
       case "Tab":
         setInput(highlightedFile);
+        // files[i] in dropdown renders short 1 highlighted letter
         break;
       case "Enter":
         setBackgroundImage(highlightedFile);
