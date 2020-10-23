@@ -10,6 +10,8 @@ const {
   ipcMain,
   globalShortcut,
 } = require("electron");
+
+const Store = require('electron-store');
 const fs = require("fs");
 const path = require("path");
 const url = require("url");
@@ -17,7 +19,12 @@ const url = require("url");
 const wallpaper = require("wallpaper");
 const ks = require("node-key-sender");
 
-let directory = path.join(__dirname, "./assets");
+const store = new Store();
+
+// let directory = path.join(__dirname, "./assets");
+
+// store.set('savedDirectory', directory);
+// console.log(store.get('savedDirectory'));
 
 let directoryImages = [];
 
@@ -51,7 +58,7 @@ const getDirectoryImages = (path) => {
     mainWindow.webContents.send("all-files", directoryImages); // memory leak
   });
 };
-getDirectoryImages(directory);
+getDirectoryImages(store.get('savedDirectory'));
 
 // Broken:
 // if (process.defaultApp || /[\\/]electron-prebuilt[\\/]/.test(process.execPath) || /[\\/]electron[\\/]/.test(process.execPath)) {
@@ -89,10 +96,10 @@ function createWindow() {
             properties: ["openDirectory"],
           })
           .then((result) => {
-            directory = path.normalize(`${result.filePaths}`);
+            store.set('savedDirectory', path.normalize(`${result.filePaths}`));
           })
           .then(() => {
-            getDirectoryImages(directory);
+            getDirectoryImages(store.get('savedDirectory'));
           })
           .catch((err) => {
             console.log(err);
@@ -220,11 +227,11 @@ app.on("activate", () => {
   }
 });
 
-ipcMain.on("App-onMount", (event, backgroundName) => {
+ipcMain.on("App-onMount", (event) => {
   event.sender.send("all-files", directoryImages);
 });
 ipcMain.on("set-background", (event, backgroundName) => {
-  fs.readdir(directory, (error, files) => {
+  fs.readdir(store.get('savedDirectory'), (error, files) => {
     if (error) {
       console.log(error);
     } else {
